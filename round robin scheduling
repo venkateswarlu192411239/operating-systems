@@ -1,0 +1,48 @@
+#include <stdio.h>
+
+int main(){
+    int n, qt;
+    printf("Enter number of processes: ");
+    scanf("%d",&n);
+
+    int pid[n], at[n], bt[n], rem[n], wt[n], tat[n];
+    for(int i=0;i<n;i++){
+        pid[i]=i+1;
+        printf("P%d Arrival & Burst Time: ",i+1);
+        scanf("%d%d",&at[i],&bt[i]);
+        rem[i]=bt[i];
+        wt[i]=0;
+    }
+
+    printf("Enter Time Quantum: ");
+    scanf("%d",&qt);
+
+    int time=0, done=0;
+    while(done < n){
+        done = 0;
+        for(int i=0;i<n;i++){
+            if(at[i] <= time && rem[i]>0){
+                if(rem[i] > qt){
+                    time += qt;
+                    rem[i] -= qt;
+                } else {
+                    time += rem[i];
+                    wt[i] = time - at[i] - bt[i];
+                    rem[i]=0;
+                }
+            }
+            if(rem[i]==0) done++;
+        }
+        if(done < n && time < at[done])
+            time = at[done];
+    }
+
+    for(int i=0;i<n;i++)
+        tat[i] = wt[i] + bt[i];
+
+    printf("\nPID AT BT WT TAT\n");
+    for(int i=0;i<n;i++)
+        printf("%d   %d   %d   %d   %d\n",
+               pid[i], at[i], bt[i], wt[i], tat[i]);
+    return 0;
+}

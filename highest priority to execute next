@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+struct Process {
+    int pid, at, bt, priority, wt, tat;
+} p[50];
+
+int main(){
+    int n;
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+    for(int i=0;i<n;i++){
+        printf("P%d Arrival Time, Burst Time & Priority: ", i+1);
+        scanf("%d%d%d",&p[i].at, &p[i].bt, &p[i].priority);
+        p[i].pid = i+1;
+    }
+
+    // sort by arrival time & then priority
+    for(int i=0;i<n-1;i++){
+        for(int j=i+1;j<n;j++){
+            if(p[j].at < p[i].at ||
+               (p[j].at == p[i].at && p[j].priority > p[i].priority)){
+                struct Process tmp = p[i];
+                p[i] = p[j];
+                p[j] = tmp;
+            }
+        }
+    }
+
+    int time = 0;
+    for(int i=0;i<n;i++){
+        if(time < p[i].at) time = p[i].at;
+        p[i].wt = time - p[i].at; 
+        time += p[i].bt;
+        p[i].tat = time - p[i].at;
+    }
+
+    printf("\nPID  AT  BT  PRI  WT  TAT\n");
+    for(int i=0;i<n;i++)
+        printf("%d    %d   %d   %d    %d    %d\n",
+              p[i].pid, p[i].at, p[i].bt, p[i].priority,
+              p[i].wt, p[i].tat);
+    return 0;
+}
