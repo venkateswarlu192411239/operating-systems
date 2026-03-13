@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <pthread.h>
+
+void* print(void *arg)
+{
+    int n = *(int*)arg;
+    printf("Thread value: %d\n",n);
+}
+
+int main()
+{
+    pthread_t t1,t2;
+    int a,b;
+
+    printf("Enter two numbers: ");
+    scanf("%d%d",&a,&b);
+
+    pthread_create(&t1,NULL,print,&a);
+    pthread_create(&t2,NULL,print,&b);
+
+    pthread_join(t1,NULL);
+    pthread_join(t2,NULL);
+
+    return 0;
+}
